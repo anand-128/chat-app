@@ -1,37 +1,36 @@
 import { createBrowserRouter } from "react-router-dom";
 import MainOutlet from "./components/MainOutlet";
 import Login from "./components/Login";
-import SignUp from "./components/SignUp";
+import Signup from "./components/Signup";
 import UserOutlet from "./components/UserOutlet";
-import ForgetPass from "./pages/ForgetPass";
+import UserDashboard from "./pages/UserDashboard";
 import ChatScreen from "./components/ChatScreen";
 import UserProfile from "./pages/UserProfile";
+import ForgetPassword from "./pages/ForgetPassword";
 import ChangePassword from "./pages/ChangePassword";
-import UserDashboard from "./pages/UserDashboard";
 
-const rout = createBrowserRouter([
+const router = createBrowserRouter([
     {
         path: "/",
         element: <MainOutlet />,
         errorElement: <>Error Page</>,
         children: [
             { index: true, element: <Login /> },
-            { path: "/login", element: <Login /> },
-            { path: "/signup", element: <SignUp /> },
-            { path: "forget-password", element: <ForgetPass />}
+            { path: "login", element: <Login /> },
+            { path: "signup", element: <Signup /> },
+            { path: "forget-password", element: <ForgetPassword /> },
         ]
     },
-
     {
         path: "/user",
         element: <UserOutlet />,
-        children:[
-            {index: true, element: <UserDashboard />},
-            { path: "chat", element: <ChatScreen /> },
-            { path: "profile", element: <UserProfile />},
-            { path: "change-password", element: <ChangePassword />}
+        children: [
+            { index: true, element: <UserDashboard/> },
+            { path: "chat", element: <ChatScreen/> },
+            { path: "profile", element: <UserProfile/> },
+            { path: "change-password", element: <ChangePassword/> },
         ]
     }
 ])
 
-export default rout
+export default router

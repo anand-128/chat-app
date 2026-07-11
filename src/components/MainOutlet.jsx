@@ -4,21 +4,21 @@ import { ToastContainer } from "react-toastify";
 
 const MainOutlet = () => {
   return (
-    <div>
+    <>
       <Outlet />
+
       <ToastContainer
         position="top-right"
-        autoClose={5000}
+        autoClose={3000}
         hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick={false}
-        rtl={false}
+        newestOnTop
+        closeOnClick
         pauseOnFocusLoss
         draggable
         pauseOnHover
-        theme="light"
+        theme="dark"
       />
-    </div>
+    </>
   );
 };
 

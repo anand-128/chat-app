@@ -1,45 +1,80 @@
-import React, { useEffect, useState } from 'react'
-import { Outlet } from 'react-router-dom'
-import Sidebar from './Sidebar'
-import { ToastContainer } from 'react-toastify'
+import React, { useEffect, useState } from "react";
+import { Outlet, Navigate } from "react-router-dom";
+import { ToastContainer } from "react-toastify";
+import Sidebar from "./Sidebar";
 
 const UserOutlet = () => {
+  const user_id = JSON.parse(localStorage.getItem("user_id"));
 
-  let user_id = JSON.parse(localStorage.getItem("user_id"))
-  // console.log(user_id);
+  const [user, setUser] = useState(null);
+  const [chatId, setChatId] = useState("");
+  const [friendName, setFriendName] = useState("");
+  const [loading, setLoading] = useState(true);
 
-  const[user, setUser] = useState({})
+  useEffect(() => {
+    if (!user_id) return;
 
-  useEffect(() =>{
-    let fetchUser = async () => {
-      let resp = await fetch("https://api.skillsvarz.com/api/user/" + user_id)
-      let result = await resp.json()
-      console.log(result)
+    const fetchUser = async () => {
+      try {
+        const resp = await fetch(
+          `https://api.skillsvarz.com/api/user/${user_id}`
+        );
 
-      setUser(result)
-      
-    }
-    fetchUser()
-  },[user_id])
-  
+        if (!resp.ok) {
+          throw new Error("Unable to fetch user");
+        }
+
+        const res = await resp.json();
+        setUser(res);
+      } catch (err) {
+        console.log(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchUser();
+  }, [user_id]);
+
+  // User not logged in
+  if (!user_id) {
+    return <Navigate to="/login" replace />;
+  }
+
+  // Loading
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-screen bg-[#0f172a] text-white">
+        Loading...
+      </div>
+    );
+  }
+
   return (
-    <div className='flex'>
-      <Sidebar user={user}/>
-      <Outlet context={{user}}/>
-      <ToastContainer
-                position="top-right"
-                autoClose={5000}
-                hideProgressBar={false}
-                newestOnTop={false}
-                closeOnClick={false}
-                rtl={false}
-                pauseOnFocusLoss
-                draggable
-                pauseOnHover
-                theme="light"
-            />
-    </div>
-  )
-}
+    <div className="flex h-screen w-full bg-[#0f172a]">
+      <Sidebar
+        user={user}
+        chatId={chatId}
+        setChatId={setChatId}
+        setFriendName={setFriendName}
+      />
 
-export default UserOutlet
+      <Outlet
+        context={{
+          user,
+          chatId,
+          setChatId,
+          friendName,
+        }}
+      />
+
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        theme="dark"
+      />
+    </div>
+  );
+};
+
+export default UserOutlet;
